@@ -1,0 +1,14 @@
+jobs:
+  include:
+    - stage: test
+      install:
+        - npm install  
+      script:
+        - npm test  
+      sudo: false
+      language: node_js
+      node_js:
+      - 10
+      git:
+        submodules: false
+      after_success: npm run coverage

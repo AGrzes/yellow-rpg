@@ -1,8 +1,9 @@
 import {expect} from 'chai'
 import 'mocha'
 import * as mock from 'mock-fs'
+import { of } from 'rxjs'
 import {toArray} from 'rxjs/operators'
-import {FileSource} from '../src/file'
+import {FileSource, read} from '../src/file'
 describe('file', function() {
   describe('FileSource', function() {
     beforeEach(() => {
@@ -47,6 +48,27 @@ describe('file', function() {
         }
       })
     })
-
+  })
+  describe('FileReader', function() {
+    const content = JSON.stringify({ test: 'test'})
+    const path = 'file1.json'
+    beforeEach(() => {
+      mock({
+        [path]: content
+      })
+    })
+    afterEach(() => {
+      mock.restore()
+    })
+    it('read file', function(done) {
+      of('file1.json').pipe(read(), toArray()).subscribe({
+        next(files) {
+          expect(files).to.be.deep.equals([{content, path}])
+        },
+        complete() {
+          done()
+        }
+      })
+    })
   })
 })

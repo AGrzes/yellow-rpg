@@ -1,5 +1,12 @@
+import {readFile} from 'fs'
 import { Glob } from 'glob'
-import { Observable, Observer} from 'rxjs'
+import { bindNodeCallback, Observable, Observer} from 'rxjs'
+import { flatMap, map} from 'rxjs/operators'
+const readFileObservable = bindNodeCallback((
+  path: string,
+  encoding: string,
+  callback: (err: NodeJS.ErrnoException, data: string) => void) =>
+  readFile(path, encoding, callback))
 
 export class FileSource {
     constructor(private pattern) {}
@@ -17,3 +24,7 @@ export class FileSource {
       })
     }
 }
+
+export const read = () =>
+  flatMap<string, {path: string, content: string}>((path) =>
+    readFileObservable(path, 'UTF-8').pipe(map((content) => ({path, content}))))

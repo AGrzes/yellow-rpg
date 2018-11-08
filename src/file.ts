@@ -6,7 +6,7 @@ export class FileSource {
 
     public scan(): Observable<any> {
       return Observable.create((observer: Observer<any>) => {
-        const glob = new Glob(this.pattern, (err, data) => {
+        const glob = new Glob(this.pattern, {silent: true}, (err, data) => {
           if (err) {
             observer.error(err)
           } else {

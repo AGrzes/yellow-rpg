@@ -1,7 +1,8 @@
 import {expect} from 'chai'
-import { Observable, of } from 'rxjs'
+import * as YAML from 'js-yaml'
+import { of } from 'rxjs'
 import { toArray } from 'rxjs/operators'
-import {json} from '../src/parser'
+import {json, yaml} from '../src/parser'
 
 describe('parser', function() {
   describe('json', function() {
@@ -15,6 +16,22 @@ describe('parser', function() {
     it('should keep other attributes', function(done) {
       const object = { test: 'test'}
       of({content: JSON.stringify(object), other: 'other'}).pipe(json(), toArray()).subscribe((items) => {
+        expect(items).to.be.deep.equals([{content: object, other: 'other'}])
+        done()
+      })
+    })
+  })
+  describe('yaml', function() {
+    it('should parse yaml', function(done) {
+      const object = { test: 'test'}
+      of({content: YAML.dump(object)}).pipe(yaml(), toArray()).subscribe((items) => {
+        expect(items).to.be.deep.equals([{content: object}])
+        done()
+      })
+    })
+    it('should keep other attributes', function(done) {
+      const object = { test: 'test'}
+      of({content: YAML.dump(object), other: 'other'}).pipe(yaml(), toArray()).subscribe((items) => {
         expect(items).to.be.deep.equals([{content: object, other: 'other'}])
         done()
       })

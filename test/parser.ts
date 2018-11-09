@@ -29,6 +29,14 @@ describe('parser', function() {
         done()
       })
     })
+    it('should parse multi document yaml', function(done) {
+      const object = { test: 'test'}
+      of({content: '---\n' + [object, object].map((s) => YAML.dump(s)).join('---\n')})
+        .pipe(yaml(), toArray()).subscribe((items) => {
+        expect(items).to.be.deep.equals([{content: [object, object]}])
+        done()
+      })
+    })
     it('should keep other attributes', function(done) {
       const object = { test: 'test'}
       of({content: YAML.dump(object), other: 'other'}).pipe(yaml(), toArray()).subscribe((items) => {

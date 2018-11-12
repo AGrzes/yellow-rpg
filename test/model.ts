@@ -9,7 +9,7 @@ describe('model', function() {
 
     it('should add entity attributes', function() {
       const builder = new ModelBuilder()
-      builder.addAttributes('id', { name: 'value'})
+      builder.entity('id').attributes({ name: 'value'})
       const model = builder.build()
       expect(model.get('id').attributes()).to.be.deep.equals({ name: 'value'})
     })

@@ -7,6 +7,13 @@ describe('model', function() {
       expect(new ModelBuilder().build()).to.be.instanceof(Model)
     })
 
+    it('should add entity', function() {
+      const builder = new ModelBuilder()
+      builder.entity('id')
+      const model = builder.build()
+      expect(model.get('id')).to.exist
+    })
+
     it('should add entity attributes', function() {
       const builder = new ModelBuilder()
       builder.entity('id').attributes({ name: 'value'})
